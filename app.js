@@ -109,11 +109,18 @@ export function emptySpotsLeft(state) {
 
 export function validateMove(state, move) {
 
-  if (move.row > 0 && move.row < 4 && move.column > 0 && move.column < 4 && state[move.row - 1][move.column - 1] === " ") {
-    return true;
+  if ((4 < move.row && move.row < 1) || (4 < move.column && move.column < 1)) {
+    console.log ("Please enter a number between 1 and 3.");
+    return false;
   }
 
-  return false;
+  if (state[move.row][move.column] !== " ") {
+    console.log("That is not a valid move.")
+    return false;
+  }
+
+  return true;
+
 }
 /**
  * We need a function to ask a user for their move.
@@ -153,8 +160,8 @@ function getPlayerMove(state, player) {
   var userRow = Number(readlineSync.question("Row: "));
   var userColumn = Number(readlineSync.question("Column: "));
   var move = {
-    row: userRow,
-    column: userColumn
+    row: userRow - 1,
+    column: userColumn - 1
   };
 
   return move;
@@ -280,11 +287,15 @@ function runGame() {
   while(emptySpotsLeft(gameBoard) && isGameWon(gameBoard)){
     // DISPLAY BOARD
     console.log(gameBoard[0]);
-    console.log(gameBoard[0]);
-    console.log(gameBoard[0]);
+    console.log(gameBoard[1]);
+    console.log(gameBoard[2]);
 
     // GET MOVE FOR CURRENT PLAYER
     move = getPlayerMove(gameBoard, currentPlayer);
+
+    while(!validateMove(gameBoard, move)){
+      move = getPlayerMove(gameBoard, currentPlayer);
+    }
     // UPDATE gameBoard with new move
     gameBoard[move.row][move.column] = currentPlayer.letter;
     // CHECK FOR WIN CONDITION
