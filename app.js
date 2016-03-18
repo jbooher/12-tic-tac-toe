@@ -109,12 +109,12 @@ export function emptySpotsLeft(state) {
 
 export function validateMove(state, move) {
 
-  if ((4 < move.row && move.row < 1) || (4 < move.column && move.column < 1)) {
+  if ((move.row) > 3 || (move.row) < 1 || (move.column) > 3  || (move.column) < 1) {
     console.log ("Please enter a number between 1 and 3.");
     return false;
   }
 
-  if (state[move.row][move.column] !== " ") {
+  if (state[move.row - 1][move.column - 1] !== " ") {
     console.log("That is not a valid move.")
     return false;
   }
@@ -157,11 +157,11 @@ function getPlayerMove(state, player) {
 
   console.log("Where would you like to place your " + player.letter + ", " + player.name);
 
-  var userRow = Number(readlineSync.question("Row: "));
-  var userColumn = Number(readlineSync.question("Column: "));
+  var userRow = Number(readlineSync.question("Row: ", {limit: Number, limitMessage: "That is not a correct row."}));
+  var userColumn = Number(readlineSync.question("Column: ", {limit: Number, limitMessage: "That is not a correct column."}));
   var move = {
-    row: userRow - 1,
-    column: userColumn - 1
+    row: userRow,
+    column: userColumn
   };
 
   return move;
@@ -197,35 +197,49 @@ export function isGameWon(state) {
   // CHECK FOR HORIZONTAL WINS ON EACH ROW
 
   if (notBlank(state[0][0]) && state[0][0] === state[0][1] && state[0][1] === state[0][2]) {
+    console.log("1");
     return state[0][0];
   }
 
-  if (notBlank(state[1][0]) && state[1][0] == state[1][1] && state[1][1] === [1][2]) {
+  if (notBlank(state[1][0]) && state[1][0] === state[1][1] && state[1][1] === state[1][2]) {
+    console.log("2");
     return state[1][0];
   }
 
   if (notBlank(state[2][0]) && state[2][0] === state[2][1] && state[2][1] === state[2][2]) {
+    console.log("3");
     return state[2][0];
   }
 
   // CHECK FOR VERTICAL WINS ON EACH COLUMN
 
-  if (notBlank(state[0][0]) && state[0][0] === (state[1][0] && state[2][0])) {
+  if (notBlank(state[0][0]) && (state[0][0] === state[1][0] && state[1][0] === state[2][0])) {
+    console.log("4");
     return state[0][0];
   }
 
-  if (notBlank(state[0][1]) && state[0][1] == (state[1][1] && state[2][1])) {
+  if (notBlank(state[0][1]) && (state[0][1] === state[1][1] && state[1][1] === state[2][1])) {
+    console.log("5");
     return state[0][1];
   }
 
-  if (notBlank(state[0][2]) && state[0][2] === (state[1][2] && state[2][2])) {
+  if (notBlank(state[0][2]) && (state[0][2] === state[1][2] && state[1][2] === state[2][2])) {
+    console.log("6");
     return state[0][2];
   }
 
   // CHECK FOR DIAGONAL WINS
-  if (notBlank(state[1][1]) && state[0][0] === (state[1][1] && state[2][2]) || state[0][2] === (state[1][1] && state[2][0])) {
+  if ((state[0][0] === state[1][1] && state[1][1] === state[2][2])) {
+    console.log("7");
     return state[1][1];
   }
+
+  if(notBlank(state[1][1]) && (state[0][2] === state[1][1] && state[1][1] === state[2][0])) {
+    console.log("8");
+    return state[1][1];
+  }
+
+  return false;
 
 }
 
@@ -274,6 +288,8 @@ function runGame() {
   var player1 = new Player(readlineSync.question("Please enter your name: "), "X");
   var player2 = new Player(readlineSync.question("Please enter your name: "), "O");
   var currentPlayer = player1;
+  var gameNotOver = true;
+  var winner;
   var move;
 
   // CREATE INITIAL GAME STATE
@@ -284,7 +300,7 @@ function runGame() {
   ];
 
   // WHILE LOOP FOR WHEN GAME IS NOT WON
-  while(emptySpotsLeft(gameBoard) && isGameWon(gameBoard)){
+  while(gameNotOver) {
     // DISPLAY BOARD
     console.log(gameBoard[0]);
     console.log(gameBoard[1]);
@@ -297,10 +313,20 @@ function runGame() {
       move = getPlayerMove(gameBoard, currentPlayer);
     }
     // UPDATE gameBoard with new move
-    gameBoard[move.row][move.column] = currentPlayer.letter;
+    gameBoard[move.row - 1][move.column - 1] = currentPlayer.letter;
     // CHECK FOR WIN CONDITION
-
+    if (isGameWon(gameBoard)) {
+      gameNotOver = false;
+      winner = currentPlayer;
+      console.log(winner.name + " Wins!"  );
+      return;
+    }
     // CHECK FOR MOVES LEFT
+
+    if (!emptySpotsLeft(gameBoard)) {
+      gameNotOver = false;
+      console.log("No spots left.  Game over!");
+    }
 
     // UPDATE CURRENT PLAYER
     if (currentPlayer === player1) {
