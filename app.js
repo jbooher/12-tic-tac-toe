@@ -107,7 +107,7 @@ export function emptySpotsLeft(state) {
  * either true or false.
  */
 
-export function validateMove(state, move) {
+export function validateMove(state, move, player) {
 
   if ((move.row) > 3 || (move.row) < 1 || (move.column) > 3  || (move.column) < 1) {
     console.log ("Please enter a number between 1 and 3.");
@@ -115,7 +115,9 @@ export function validateMove(state, move) {
   }
 
   if (state[move.row - 1][move.column - 1] !== " ") {
-    console.log("That is not a valid move.")
+    if(player.name !== "Tic-Tac-Toe AI"){
+      console.log("That is not a valid move.");
+    }
     return false;
   }
 
@@ -193,49 +195,71 @@ function getPlayerMove(state, player) {
  * false
  */
 
+function horizontalWinTop(state) {
+ return state[0][0] === state[0][1] && state[0][1] === state[0][2];
+}
+
+function horizontalWinMid(state) {
+  return state[1][0] === state[1][1] && state[1][1] === state[1][2];
+}
+
+function horizontalWinBot(state) {
+  return state[2][0] === state[2][1] && state[2][1] === state[2][2];
+}
+
+function verticalWinLeft(state) {
+  return state[0][0] === state[1][0] && state[1][0] === state[2][0];
+}
+
+function verticalWinMid(state) {
+  return state[0][1] === state[1][1] && state[1][1] === state[2][1];
+}
+
+function verticalWinRight(state) {
+  return state[0][2] === state[1][2] && state[1][2] === state[2][2];
+}
+
+function diagonalWin(state) {
+  return ((state[0][0] === state[1][1] && state[1][1] === state[2][2]) || (state[0][2] === state[1][1] && state[1][1] === state[2][0]));
+}
+
 export function isGameWon(state) {
   // CHECK FOR HORIZONTAL WINS ON EACH ROW
-
-  if (notBlank(state[0][0]) && state[0][0] === state[0][1] && state[0][1] === state[0][2]) {
+  if (notBlank(state[0][0]) && horizontalWinTop(state)) {
     console.log("1");
     return state[0][0];
   }
 
-  if (notBlank(state[1][0]) && state[1][0] === state[1][1] && state[1][1] === state[1][2]) {
+  if (notBlank(state[1][0]) && horizontalWinMid(state)) {
     console.log("2");
     return state[1][0];
   }
 
-  if (notBlank(state[2][0]) && state[2][0] === state[2][1] && state[2][1] === state[2][2]) {
+  if (notBlank(state[2][0]) && horizontalWinBot(state)) {
     console.log("3");
     return state[2][0];
   }
 
   // CHECK FOR VERTICAL WINS ON EACH COLUMN
 
-  if (notBlank(state[0][0]) && (state[0][0] === state[1][0] && state[1][0] === state[2][0])) {
+  if (notBlank(state[0][0]) && verticalWinLeft(state)) {
     console.log("4");
     return state[0][0];
   }
 
-  if (notBlank(state[0][1]) && (state[0][1] === state[1][1] && state[1][1] === state[2][1])) {
+  if (notBlank(state[0][1]) && verticalWinMid(state)) {
     console.log("5");
     return state[0][1];
   }
 
-  if (notBlank(state[0][2]) && (state[0][2] === state[1][2] && state[1][2] === state[2][2])) {
+  if (notBlank(state[0][2]) && verticalWinRight(state)) {
     console.log("6");
     return state[0][2];
   }
 
   // CHECK FOR DIAGONAL WINS
-  if ((state[0][0] === state[1][1] && state[1][1] === state[2][2])) {
+  if(notBlank(state[1][1]) && diagonalWin(state)) {
     console.log("7");
-    return state[1][1];
-  }
-
-  if(notBlank(state[1][1]) && (state[0][2] === state[1][1] && state[1][1] === state[2][0])) {
-    console.log("8");
     return state[1][1];
   }
 
@@ -281,12 +305,84 @@ export function isGameWon(state) {
  * while loop. If it isn't, let the loop keep going.
  */
 
+ function displayBoard(state) {
+  console.log(state[0]);
+  console.log(state[1]);
+  console.log(state[2]);
+ }
+
 function runGame() {
   // DISPLAY WELCOME BANNER
-  console.log("Welcome to Tic-Tac-Toe!")
+  console.log("Welcome to Tic-Tac-Toe!");
   // ASK FOR PLAYER NAMES AND CREATE PLAYERS
   var player1 = new Player(readlineSync.question("Please enter your name: "), "X");
   var player2 = new Player(readlineSync.question("Please enter your name: "), "O");
+  var currentPlayer = player1;
+  var gameNotOver = true;
+  var winner;
+  var move;
+
+  // CREATE INITIAL GAME STATE
+  var gameBoard = [
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+  ];
+
+  // WHILE LOOP FOR WHEN GAME IS NOT WON
+  while(gameNotOver) {
+    // DISPLAY BOARD
+    displayBoard(gameBoard);
+
+    // GET MOVE FOR CURRENT PLAYER
+    move = getPlayerMove(gameBoard, currentPlayer);
+
+    while(!validateMove(gameBoard, move, currentPlayer)){
+      move = getPlayerMove(gameBoard, currentPlayer);
+    }
+    // UPDATE gameBoard with new move
+    gameBoard[move.row - 1][move.column - 1] = currentPlayer.letter;
+    // CHECK FOR WIN CONDITION
+    if (isGameWon(gameBoard)) {
+      gameNotOver = false;
+      winner = currentPlayer;
+      displayBoard(gameBoard);
+      console.log(winner.name + " Wins!");
+      return;
+    }
+    // CHECK FOR MOVES LEFT
+
+    if (!emptySpotsLeft(gameBoard)) {
+      gameNotOver = false;
+      displayBoard(gameBoard);
+      console.log("No spots left.  Game over!");
+    }
+
+    // UPDATE CURRENT PLAYER
+    if (currentPlayer === player1) {
+      currentPlayer = player2;
+    }
+    else {
+      currentPlayer = player1;
+    }
+  }
+}
+
+function generateAIMove() {
+  var move = {
+    row: Math.floor(Math.random() * 3) + 1,
+    column: Math.floor(Math.random() * 3) + 1
+  };
+
+  return move;
+}
+
+function run1pGame() {
+  // DISPLAY WELCOME BANNER
+  console.log("Welcome to Tic-Tac-Toe!");
+  // ASK FOR PLAYER NAMES AND CREATE PLAYERS
+  var player1 = new Player(readlineSync.question("Please enter your name: "), "X");
+  var computer = new Player("Tic-Tac-Toe AI", "O");
   var currentPlayer = player1;
   var gameNotOver = true;
   var winner;
@@ -307,9 +403,19 @@ function runGame() {
     console.log(gameBoard[2]);
 
     // GET MOVE FOR CURRENT PLAYER
-    move = getPlayerMove(gameBoard, currentPlayer);
+    if (currentPlayer === computer) {
 
-    while(!validateMove(gameBoard, move)){
+      while(!validateMove(gameBoard, move, currentPlayer)){
+        move = generateAIMove();
+      }
+
+      console.log("My turn!  Check out this move!")
+    }
+    else {
+      move = getPlayerMove(gameBoard, currentPlayer);
+    }
+
+    while(!validateMove(gameBoard, move, currentPlayer)){
       move = getPlayerMove(gameBoard, currentPlayer);
     }
     // UPDATE gameBoard with new move
@@ -318,30 +424,26 @@ function runGame() {
     if (isGameWon(gameBoard)) {
       gameNotOver = false;
       winner = currentPlayer;
-      console.log(winner.name + " Wins!"  );
+      displayBoard(gameBoard);
+      console.log(winner.name + " Wins!");
       return;
     }
     // CHECK FOR MOVES LEFT
 
     if (!emptySpotsLeft(gameBoard)) {
       gameNotOver = false;
+      displayBoard(gameBoard);
       console.log("No spots left.  Game over!");
     }
 
     // UPDATE CURRENT PLAYER
     if (currentPlayer === player1) {
-      currentPlayer = player2;
+      currentPlayer = computer;
     }
     else {
       currentPlayer = player1;
     }
   }
-
-  // CONGRATULATE WINNER OR DECLARE IT A TIE
 }
 
-/**
- * Finally, we call our runGame function so that
- * the game actually starts.
- */
- runGame();
+run1pGame();
