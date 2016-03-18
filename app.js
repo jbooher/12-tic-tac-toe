@@ -311,16 +311,25 @@ export function isGameWon(state) {
   console.log(state[2]);
  }
 
-function runGame() {
+function run2pGame() {
   // DISPLAY WELCOME BANNER
-  console.log("Welcome to Tic-Tac-Toe!");
+  console.log("Welcome to Two-Player Tic-Tac-Toe!");
+  console.log("Good luck to both of you!");
   // ASK FOR PLAYER NAMES AND CREATE PLAYERS
   var player1 = new Player(readlineSync.question("Please enter your name: "), "X");
   var player2 = new Player(readlineSync.question("Please enter your name: "), "O");
-  var currentPlayer = player1;
   var gameNotOver = true;
   var winner;
   var move;
+  var firstPlayer = Math.floor(Math.random() * 2) + 1;
+  var currentPlayer;
+
+  if (firstPlayer === 1) {
+    currentPlayer = player1;
+  }
+  else {
+    currentPlayer = player2;
+  }
 
   // CREATE INITIAL GAME STATE
   var gameBoard = [
@@ -377,16 +386,29 @@ function generateAIMove() {
   return move;
 }
 
-function run1pGame() {
+function generateAIMoveHard(state, firstPlayer) {
+
+}
+
+function run1pGame(mode) {
   // DISPLAY WELCOME BANNER
-  console.log("Welcome to Tic-Tac-Toe!");
+  console.log("Welcome to One-Player Tic-Tac-Toe!");
+  console.log("Good luck!");
   // ASK FOR PLAYER NAMES AND CREATE PLAYERS
   var player1 = new Player(readlineSync.question("Please enter your name: "), "X");
   var computer = new Player("Tic-Tac-Toe AI", "O");
-  var currentPlayer = player1;
   var gameNotOver = true;
   var winner;
   var move;
+  var firstPlayer = Math.floor(Math.random() * 2) + 1;
+  var currentPlayer;
+
+  if (firstPlayer === 1) {
+    currentPlayer = player1;
+  }
+  else {
+    currentPlayer = computer;
+  }
 
   // CREATE INITIAL GAME STATE
   var gameBoard = [
@@ -398,26 +420,35 @@ function run1pGame() {
   // WHILE LOOP FOR WHEN GAME IS NOT WON
   while(gameNotOver) {
     // DISPLAY BOARD
-    console.log(gameBoard[0]);
-    console.log(gameBoard[1]);
-    console.log(gameBoard[2]);
+    displayBoard(gameBoard);
 
     // GET MOVE FOR CURRENT PLAYER
     if (currentPlayer === computer) {
+      if(mode === 2) {
+        move = generateAIMoveHard(gameBoard, firstPlayer);
 
-      while(!validateMove(gameBoard, move, currentPlayer)){
+        while(!validateMove(gameBoard, move, currentPlayer)){
+          move = generateAIMoveHard(gameBoard, firstPlayer);
+        }
+      }
+      else {
         move = generateAIMove();
+
+        while(!validateMove(gameBoard, move, currentPlayer)){
+          move = generateAIMove();
+        }
       }
 
       console.log("My turn!  Check out this move!")
     }
     else {
       move = getPlayerMove(gameBoard, currentPlayer);
+
+      while(!validateMove(gameBoard, move, currentPlayer)){
+        move = getPlayerMove(gameBoard, currentPlayer);
+      }
     }
 
-    while(!validateMove(gameBoard, move, currentPlayer)){
-      move = getPlayerMove(gameBoard, currentPlayer);
-    }
     // UPDATE gameBoard with new move
     gameBoard[move.row - 1][move.column - 1] = currentPlayer.letter;
     // CHECK FOR WIN CONDITION
@@ -446,4 +477,36 @@ function run1pGame() {
   }
 }
 
-run1pGame();
+function runGame() {
+  var game = 0;
+
+  console.log("It's time for some Tic-Tac-Toe!")
+  console.log("Enter 1 for 1 player game against AI.");
+  console.log("Enter 2 for 2 player game against a friend.");
+
+  while(game !== 1 && game !==2) {
+    game = Number(readlineSync.question("Please enter 1 or 2: "));
+
+    if(game === 1) {
+      console.log("Would you like to player against normal or hard AI?");
+      console.log("Type 1 for normal or 2 for hard.");
+      var type = Number(readlineSync.question("Please enter 1 or 2: "));
+      run1pGame(type);
+    }
+    else if (game === 2) {
+      run2pGame();
+    }
+    else {
+      console.log("That is not a valid input.  Please try again.")
+    }
+  }
+}
+
+runGame();
+
+//ROTATING BOARD FUNCTION!
+/*
+
+FUNCTION if row = 0 then 2, if row = 2 == ROTATE CALL ITSELF MINUS 1
+
+*/
