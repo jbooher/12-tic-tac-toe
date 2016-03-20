@@ -727,6 +727,216 @@ function generateAIMoveHard(state, firstPlayer) {
   }
   //END STRAIGHT WINS
 
+  //LOSSES **************************
+
+  //Checking the top-right win on all rotated boards.
+  if(topRightAILoss(tempState) && state[0][2] === " ") {
+    move = {
+      row: 1,
+      column: 3
+    }
+    console.log("tr1l");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topRightAILoss(tempState) && state[2][2] === " ") {
+    move = {
+      row: 3,
+      column: 3
+    }
+    console.log("tr2");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topRightAIWin(tempState) && state[2][0] === " ") {
+    move = {
+      row: 3,
+      column: 1
+    }
+    console.log("tr3");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topRightAIWin(tempState) && state[0][0] === " ") {
+    move = {
+      row: 1,
+      column: 1
+    }
+    console.log("tr4");
+  }
+  //END TOP RIGHT
+
+  //Checking all top-mid wins for all rotated boards
+  tempState = state;
+
+  if(topMidAIWin(tempState) && state[0][1] === " ") {
+    move = {
+      row: 1,
+      column: 2
+    }
+    console.log("tm1");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topMidAIWin(tempState) && state[1][2] === " ") {
+    move = {
+      row: 2,
+      column: 3
+    }
+    console.log("tm2");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topMidAIWin(tempState) && state[2][1] === " ") {
+    move = {
+      row: 3,
+      column: 2
+    }
+    console.log("tm3");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topMidAIWin(tempState) && state[1][0] === " ") {
+    move = {
+      row: 2,
+      column: 1
+    }
+    console.log("tm4");
+  }
+  //END TOP MID WINS
+
+  //Checking all top left wins for all rotated boards.
+  tempState = state;
+
+  if(topLeftAIWin(tempState) && state[0][0] === " ") {
+    move = {
+      row: 1,
+      column: 1
+    }
+    console.log("tl1");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topLeftAIWin(tempState) && state[0][2] === " ") {
+    move = {
+      row: 1,
+      column: 3
+    }
+    console.log("tl2");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topLeftAIWin(tempState) && state[2][2] === " ") {
+    move = {
+      row: 3,
+      column: 3
+    }
+    console.log("tl3");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topLeftAIWin(tempState) && state[2][0] === " ") {
+    move = {
+      row: 3,
+      column: 1
+    }
+    console.log("tl4");
+  }
+  //END TOP LEFT WINS
+
+  //Checking all diagonal wins for all rotated boards.
+  tempState = state;
+
+  if(diagonalAIWin(tempState) && state[2][2] === " ") {
+    move = {
+      row: 3,
+      column: 3
+    }
+    console.log("d1");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(diagonalAIWin(tempState) && state[2][0] === " ") {
+    move = {
+      row: 3,
+      column: 1
+    }
+    console.log("d2");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(diagonalAIWin(tempState) && state[0][0] === " ") {
+    move = {
+      row: 1,
+      column: 1
+    }
+    console.log("d3");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(diagonalAIWin(tempState) && state[0][2] === " ") {
+    move = {
+      row: 1,
+      column: 3
+    }
+    console.log("d4");
+  }
+  //END DIAGONAL WINS
+
+  //Checking all straight wins on all rotated boards.
+  tempState = state;
+
+  if(straightAIWin(tempState) && state[2][1] === " ") {
+    move = {
+      row: 3,
+      column: 2
+    }
+    console.log("s1");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(straightAIWin(tempState) && state[1][0] === " ") {
+    move = {
+      row: 2,
+      column: 1
+    }
+    console.log("s2");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(straightAIWin(tempState) && state[0][1] === " ") {
+    move = {
+      row: 1,
+      column: 2
+    }
+    console.log("s3");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(straightAIWin(tempState) && state[1][2] === " ") {
+    move = {
+      row: 2,
+      column: 3
+    }
+    console.log("s4");
+  }
+  //END STRAIGHT WINS
+
   tempState = state;
 
   return move;
