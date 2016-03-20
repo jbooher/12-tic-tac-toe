@@ -386,7 +386,7 @@ function generateAIMove() {
   return move;
 }
 
-function rotateBoard (board, rotate) {
+function rotateBoard (board) {
 
   var splitBoard = board.join().split(",");
   var newBoard = [];
@@ -411,12 +411,7 @@ function rotateBoard (board, rotate) {
     }
   }
 
-  if (rotate > 0) {
-     return rotateBoard(board, rotate - 1);
-   }
-   else {
-     return completeBoard;
-   }
+  return completeBoard;
 }
 
 function topRightAIWin(state) {
@@ -449,6 +444,41 @@ function diagonalAIWin(state) {
 
 function straightAIWin(state) {
   if (state[0][1] === "O" && state[1][1] === "O") {
+    return true;
+  }
+  return false;
+}
+
+function topRightAILoss(state) {
+  if (state[0][0] === "X" && state[0][1] === "X") {
+    return true;
+  }
+  return false;
+}
+
+function topMidAILoss(state) {
+  if (state[0][0] === "X" && state[0][2] === "X") {
+    return true;
+  }
+  return false;
+}
+
+function topLeftAILoss(state) {
+  if (state[0][1] === "X" && state[0][2] === "X") {
+    return true;
+  }
+  return false;
+}
+
+function diagonalAILoss(state) {
+  if (state[0][0] === "X" && state[1][1] === "X") {
+    return true;
+  }
+  return false;
+}
+
+function straightAILoss(state) {
+  if (state[0][2] === "X" && state[2][1] === "X") {
     return true;
   }
   return false;
@@ -490,116 +520,214 @@ function generateAIMoveHard(state, firstPlayer) {
   //END INITIAL MOVES
 
   //Checking the top-right win on all rotated boards.
-  if(topRightAIWin(tempState)) {
+  if(topRightAIWin(tempState) && state[0][2] === " ") {
     move = {
       row: 1,
       column: 3
     }
+    console.log("tr1");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topRightAIWin(tempState)) {
+  if(topRightAIWin(tempState) && state[2][2] === " ") {
     move = {
       row: 3,
       column: 3
     }
+    console.log("tr2");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topRightAIWin(tempState)) {
+  if(topRightAIWin(tempState) && state[2][0] === " ") {
     move = {
       row: 3,
       column: 1
     }
+    console.log("tr3");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topRightAIWin(tempState)) {
+  if(topRightAIWin(tempState) && state[0][0] === " ") {
     move = {
       row: 1,
       column: 1
     }
+    console.log("tr4");
   }
   //END TOP RIGHT
 
   //Checking all top-mid wins for all rotated boards
-  tempState = rotateBoard(tempState);
+  tempState = state;
 
-  if(topMidAIWin(tempState)) {
+  if(topMidAIWin(tempState) && state[0][1] === " ") {
     move = {
       row: 1,
       column: 2
     }
+    console.log("tm1");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topMidAIWin(tempState)) {
+  if(topMidAIWin(tempState) && state[1][2] === " ") {
     move = {
       row: 2,
       column: 3
     }
+    console.log("tm2");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topMidAIWin(tempState)) {
+  if(topMidAIWin(tempState) && state[2][1] === " ") {
     move = {
       row: 3,
       column: 2
     }
+    console.log("tm3");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topMidAIWin(tempState)) {
+  if(topMidAIWin(tempState) && state[1][0] === " ") {
     move = {
       row: 2,
       column: 1
     }
+    console.log("tm4");
   }
   //END TOP MID WINS
 
   //Checking all top left wins for all rotated boards.
-  tempState = rotateBoard(tempState);
+  tempState = state;
 
-  if(topLeftAIWin(tempState)) {
+  if(topLeftAIWin(tempState) && state[0][0] === " ") {
     move = {
       row: 1,
       column: 1
     }
+    console.log("tl1");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topLeftAIWin(tempState)) {
+  if(topLeftAIWin(tempState) && state[0][2] === " ") {
     move = {
       row: 1,
       column: 3
     }
+    console.log("tl2");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topLeftAIWin(tempState)) {
+  if(topLeftAIWin(tempState) && state[2][2] === " ") {
     move = {
       row: 3,
       column: 3
     }
+    console.log("tl3");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topLeftAIWin(tempState)) {
+  if(topLeftAIWin(tempState) && state[2][0] === " ") {
     move = {
       row: 3,
       column: 1
     }
+    console.log("tl4");
   }
   //END TOP LEFT WINS
+
+  //Checking all diagonal wins for all rotated boards.
+  tempState = state;
+
+  if(diagonalAIWin(tempState) && state[2][2] === " ") {
+    move = {
+      row: 3,
+      column: 3
+    }
+    console.log("d1");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(diagonalAIWin(tempState) && state[2][0] === " ") {
+    move = {
+      row: 3,
+      column: 1
+    }
+    console.log("d2");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(diagonalAIWin(tempState) && state[0][0] === " ") {
+    move = {
+      row: 1,
+      column: 1
+    }
+    console.log("d3");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(diagonalAIWin(tempState) && state[0][2] === " ") {
+    move = {
+      row: 1,
+      column: 3
+    }
+    console.log("d4");
+  }
+  //END DIAGONAL WINS
+
+  //Checking all straight wins on all rotated boards.
+  tempState = state;
+
+  if(straightAIWin(tempState) && state[2][1] === " ") {
+    move = {
+      row: 3,
+      column: 2
+    }
+    console.log("s1");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(straightAIWin(tempState) && state[1][0] === " ") {
+    move = {
+      row: 2,
+      column: 1
+    }
+    console.log("s2");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(straightAIWin(tempState) && state[0][1] === " ") {
+    move = {
+      row: 1,
+      column: 2
+    }
+    console.log("s3");
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(straightAIWin(tempState) && state[1][2] === " ") {
+    move = {
+      row: 2,
+      column: 3
+    }
+    console.log("s4");
+  }
+  //END STRAIGHT WINS
+
+  tempState = state;
 
   return move;
 }
@@ -638,9 +766,9 @@ function run1pGame(mode) {
       if(mode === 2) {
         move = generateAIMoveHard(gameBoard, firstPlayer);
 
-        while(!validateMove(gameBoard, move, currentPlayer)){
-          move = generateAIMoveHard(gameBoard, firstPlayer);
-        }
+        // while(!validateMove(gameBoard, move, currentPlayer)){
+        //   move = generateAIMoveHard(gameBoard, firstPlayer);
+        // }
       }
       else {
         move = generateAIMove();
