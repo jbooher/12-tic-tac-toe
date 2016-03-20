@@ -386,8 +386,222 @@ function generateAIMove() {
   return move;
 }
 
+function rotateBoard (board, rotate) {
+
+  var splitBoard = board.join().split(",");
+  var newBoard = [];
+  var completeBoard = [[], [], []];
+
+  newBoard[0] = splitBoard[6];
+  newBoard[1] = splitBoard[3];
+  newBoard[2] = splitBoard[0];
+  newBoard[3] = splitBoard[7];
+  newBoard[4] = splitBoard[4];
+  newBoard[5] = splitBoard[1];
+  newBoard[6] = splitBoard[8];
+  newBoard[7] = splitBoard[5];
+  newBoard[8] = splitBoard[2];
+
+  var j = 0;
+
+  for(var i = 0; i < 3; i++) {
+    for(var k = 0; k < 3; k++) {
+      completeBoard[i][k] = newBoard[j];
+      j++;
+    }
+  }
+
+  if (rotate > 0) {
+     return rotateBoard(board, rotate - 1);
+   }
+   else {
+     return completeBoard;
+   }
+}
+
+function topRightAIWin(state) {
+  if (state[0][0] === "O" && state[0][1] === "O") {
+    return true;
+  }
+  return false;
+}
+
+function topMidAIWin(state) {
+  if (state[0][0] === "O" && state[0][2] === "O") {
+    return true;
+  }
+  return false;
+}
+
+function topLeftAIWin(state) {
+  if (state[0][1] === "O" && state[0][2] === "O") {
+    return true;
+  }
+  return false;
+}
+
+function diagonalAIWin(state) {
+  if (state[0][0] === "O" && state[1][1] === "O") {
+    return true;
+  }
+  return false;
+}
+
+function straightAIWin(state) {
+  if (state[0][1] === "O" && state[1][1] === "O") {
+    return true;
+  }
+  return false;
+}
+
 function generateAIMoveHard(state, firstPlayer) {
 
+  var tempState = state;
+  var move = {
+    row: 2,
+    column: 2
+  };
+
+  //INITIAL MOVES
+  if(state[1][1] === " ") {
+    move = {
+      row: 2,
+      column: 2
+    }
+  }
+  else if(state[0][0] === " ") {
+    move = {
+      row: 1,
+      column: 1
+    }
+  }
+  else if(state[0][2] === " ") {
+    move = {
+      row: 1,
+      column: 3
+    }
+  }
+  else {
+    move = {
+      row: 3,
+      column: 1
+    }
+  }
+  //END INITIAL MOVES
+
+  //Checking the top-right win on all rotated boards.
+  if(topRightAIWin(tempState)) {
+    move = {
+      row: 1,
+      column: 3
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topRightAIWin(tempState)) {
+    move = {
+      row: 3,
+      column: 3
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topRightAIWin(tempState)) {
+    move = {
+      row: 3,
+      column: 1
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topRightAIWin(tempState)) {
+    move = {
+      row: 1,
+      column: 1
+    }
+  }
+  //END TOP RIGHT
+
+  //Checking all top-mid wins for all rotated boards
+  tempState = rotateBoard(tempState);
+
+  if(topMidAIWin(tempState)) {
+    move = {
+      row: 1,
+      column: 2
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topMidAIWin(tempState)) {
+    move = {
+      row: 2,
+      column: 3
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topMidAIWin(tempState)) {
+    move = {
+      row: 3,
+      column: 2
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topMidAIWin(tempState)) {
+    move = {
+      row: 2,
+      column: 1
+    }
+  }
+  //END TOP MID WINS
+
+  //Checking all top left wins for all rotated boards.
+  tempState = rotateBoard(tempState);
+
+  if(topLeftAIWin(tempState)) {
+    move = {
+      row: 1,
+      column: 1
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topLeftAIWin(tempState)) {
+    move = {
+      row: 1,
+      column: 3
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topLeftAIWin(tempState)) {
+    move = {
+      row: 3,
+      column: 3
+    }
+  }
+
+  tempState = rotateBoard(tempState);
+
+  if(topLeftAIWin(tempState)) {
+    move = {
+      row: 3,
+      column: 1
+    }
+  }
+  //END TOP LEFT WINS
+
+  return move;
 }
 
 function run1pGame(mode) {
@@ -410,19 +624,16 @@ function run1pGame(mode) {
     currentPlayer = computer;
   }
 
-  // CREATE INITIAL GAME STATE
   var gameBoard = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
     [' ', ' ', ' '],
   ];
 
-  // WHILE LOOP FOR WHEN GAME IS NOT WON
   while(gameNotOver) {
-    // DISPLAY BOARD
+
     displayBoard(gameBoard);
 
-    // GET MOVE FOR CURRENT PLAYER
     if (currentPlayer === computer) {
       if(mode === 2) {
         move = generateAIMoveHard(gameBoard, firstPlayer);
@@ -503,10 +714,3 @@ function runGame() {
 }
 
 runGame();
-
-//ROTATING BOARD FUNCTION!
-/*
-
-FUNCTION if row = 0 then 2, if row = 2 == ROTATE CALL ITSELF MINUS 1
-
-*/
