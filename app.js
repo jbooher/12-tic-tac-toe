@@ -568,8 +568,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(topRightAIWin(tempState) && state[2][2] === " ") {
     move = {
-      row: 3,
-      column: 3
+      row: 1,
+      column: 1
     }
     console.log("tr2");
   }
@@ -588,8 +588,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(topRightAIWin(tempState) && state[0][0] === " ") {
     move = {
-      row: 1,
-      column: 1
+      row: 3,
+      column: 3
     }
     console.log("tr4");
   }
@@ -631,7 +631,7 @@ function generateAIMoveHard(state, firstPlayer) {
   if(topMidAIWin(tempState) && state[1][0] === " ") {
     move = {
       row: 2,
-      column: 1
+      column: 3
     }
     console.log("tm4");
   }
@@ -652,8 +652,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(topLeftAIWin(tempState) && state[0][2] === " ") {
     move = {
-      row: 1,
-      column: 3
+      row: 3,
+      column: 1
     }
     console.log("tl2");
   }
@@ -672,8 +672,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(topLeftAIWin(tempState) && state[2][0] === " ") {
     move = {
-      row: 3,
-      column: 1
+      row: 1,
+      column: 3
     }
     console.log("tl4");
   }
@@ -694,8 +694,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(diagonalAIWin(tempState) && state[2][0] === " ") {
     move = {
-      row: 3,
-      column: 1
+      row: 1,
+      column: 3
     }
     console.log("d2");
   }
@@ -714,8 +714,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(diagonalAIWin(tempState) && state[0][2] === " ") {
     move = {
-      row: 1,
-      column: 3
+      row: 3,
+      column: 1
     }
     console.log("d4");
   }
@@ -737,7 +737,7 @@ function generateAIMoveHard(state, firstPlayer) {
   if(straightAIWin(tempState) && state[1][0] === " ") {
     move = {
       row: 2,
-      column: 1
+      column: 3
     }
     console.log("s2");
   }
@@ -757,7 +757,7 @@ function generateAIMoveHard(state, firstPlayer) {
   if(straightAIWin(tempState) && state[1][2] === " ") {
     move = {
       row: 2,
-      column: 3
+      column: 1
     }
     console.log("s4");
   }
@@ -778,8 +778,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(topRightAILoss(tempState) && state[2][2] === " ") {
     move = {
-      row: 3,
-      column: 3
+      row: 1,
+      column: 1
     }
     console.log("tr2l");
   }
@@ -798,8 +798,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(topRightAILoss(tempState) && state[0][0] === " ") {
     move = {
-      row: 1,
-      column: 1
+      row: 3,
+      column: 3
     }
     console.log("tr4l");
   }
@@ -862,8 +862,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(topLeftAILoss(tempState) && state[0][2] === " ") {
     move = {
-      row: 1,
-      column: 3
+      row: 3,
+      column: 1
     }
     console.log("tl2l");
   }
@@ -882,8 +882,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(topLeftAILoss(tempState) && state[2][0] === " ") {
     move = {
-      row: 3,
-      column: 1
+      row: 1,
+      column: 3
     }
     console.log("tl4l");
   }
@@ -904,8 +904,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(diagonalAILoss(tempState) && state[2][0] === " ") {
     move = {
-      row: 3,
-      column: 1
+      row: 1,
+      column: 3
     }
     console.log("d2");
   }
@@ -924,8 +924,8 @@ function generateAIMoveHard(state, firstPlayer) {
 
   if(diagonalAILoss(tempState) && state[0][2] === " ") {
     move = {
-      row: 1,
-      column: 3
+      row: 3,
+      column: 1
     }
     console.log("d4l");
   }
@@ -947,7 +947,7 @@ function generateAIMoveHard(state, firstPlayer) {
   if(straightAILoss(tempState) && state[1][0] === " ") {
     move = {
       row: 2,
-      column: 1
+      column: 3
     }
     console.log("s2l");
   }
@@ -967,7 +967,7 @@ function generateAIMoveHard(state, firstPlayer) {
   if(straightAILoss(tempState) && state[1][2] === " ") {
     move = {
       row: 2,
-      column: 3
+      column: 1
     }
     console.log("s4l");
   }
@@ -1012,9 +1012,9 @@ function run1pGame(mode) {
       if(mode === 2) {
         move = generateAIMoveHard(gameBoard, firstPlayer);
 
-        // while(!validateMove(gameBoard, move, currentPlayer)){
-        //   move = generateAIMoveHard(gameBoard, firstPlayer);
-        // }
+        while(!validateMove(gameBoard, move, currentPlayer)){
+          move = generateAIMoveHard(gameBoard, firstPlayer);
+        }
       }
       else {
         move = generateAIMove();
