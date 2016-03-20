@@ -411,6 +411,12 @@ function rotateBoard (board) {
     }
   }
 
+  // console.log("Rotating");
+  // console.log(completeBoard[0]);
+  // console.log(completeBoard[1]);
+  // console.log(completeBoard[2]);
+  // console.log("Rotate complete.");
+
   return completeBoard;
 }
 
@@ -511,9 +517,39 @@ function generateAIMoveHard(state, firstPlayer) {
       column: 3
     }
   }
-  else {
+  else if(state[2][0] === " ") {
     move = {
       row: 3,
+      column: 1
+    }
+  }
+  else if(state[2][2] === " ") {
+    move = {
+      row: 3,
+      column: 3
+    }
+  }
+  else if(state[0][1] === " ") {
+    move = {
+      row: 1,
+      column: 2
+    }
+  }
+  else if(state[1][2] === " ") {
+    move = {
+      row: 2,
+      column: 3
+    }
+  }
+  else if(state[2][1] === " ") {
+    move = {
+      row: 3,
+      column: 2
+    }
+  }
+  else if(state[1][0] === " ") {
+    move = {
+      row: 2,
       column: 1
     }
   }
@@ -575,7 +611,7 @@ function generateAIMoveHard(state, firstPlayer) {
   if(topMidAIWin(tempState) && state[1][2] === " ") {
     move = {
       row: 2,
-      column: 3
+      column: 1
     }
     console.log("tm2");
   }
@@ -729,7 +765,7 @@ function generateAIMoveHard(state, firstPlayer) {
 
   //LOSSES **************************
 
-  //Checking the top-right win on all rotated boards.
+  //Checking the top-right loss on all rotated boards.
   if(topRightAILoss(tempState) && state[0][2] === " ") {
     move = {
       row: 1,
@@ -745,128 +781,128 @@ function generateAIMoveHard(state, firstPlayer) {
       row: 3,
       column: 3
     }
-    console.log("tr2");
+    console.log("tr2l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topRightAIWin(tempState) && state[2][0] === " ") {
+  if(topRightAILoss(tempState) && state[2][0] === " ") {
     move = {
       row: 3,
       column: 1
     }
-    console.log("tr3");
+    console.log("tr3l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topRightAIWin(tempState) && state[0][0] === " ") {
+  if(topRightAILoss(tempState) && state[0][0] === " ") {
     move = {
       row: 1,
       column: 1
     }
-    console.log("tr4");
+    console.log("tr4l");
   }
-  //END TOP RIGHT
+  //END TOP RIGHT LOSSES
 
-  //Checking all top-mid wins for all rotated boards
+  //Checking all top-mid losses for all rotated boards
   tempState = state;
 
-  if(topMidAIWin(tempState) && state[0][1] === " ") {
+  if(topMidAILoss(tempState) && state[0][1] === " ") {
     move = {
       row: 1,
       column: 2
     }
-    console.log("tm1");
+    console.log("tm1l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topMidAIWin(tempState) && state[1][2] === " ") {
+  if(topMidAILoss(tempState) && state[1][2] === " ") {
     move = {
       row: 2,
-      column: 3
+      column: 1
     }
-    console.log("tm2");
+    console.log("tm2l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topMidAIWin(tempState) && state[2][1] === " ") {
+  if(topMidAILoss(tempState) && state[2][1] === " ") {
     move = {
       row: 3,
       column: 2
     }
-    console.log("tm3");
+    console.log("tm3l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topMidAIWin(tempState) && state[1][0] === " ") {
+  if(topMidAILoss(tempState) && state[1][0] === " ") {
     move = {
       row: 2,
-      column: 1
+      column: 3
     }
-    console.log("tm4");
+    console.log("tm4l");
   }
-  //END TOP MID WINS
+  //END TOP MID LOSSES
 
-  //Checking all top left wins for all rotated boards.
+  //Checking all top left losses for all rotated boards.
   tempState = state;
 
-  if(topLeftAIWin(tempState) && state[0][0] === " ") {
+  if(topLeftAILoss(tempState) && state[0][0] === " ") {
     move = {
       row: 1,
       column: 1
     }
-    console.log("tl1");
+    console.log("tl1l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topLeftAIWin(tempState) && state[0][2] === " ") {
+  if(topLeftAILoss(tempState) && state[0][2] === " ") {
     move = {
       row: 1,
       column: 3
     }
-    console.log("tl2");
+    console.log("tl2l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topLeftAIWin(tempState) && state[2][2] === " ") {
+  if(topLeftAILoss(tempState) && state[2][2] === " ") {
     move = {
       row: 3,
       column: 3
     }
-    console.log("tl3");
+    console.log("tl3l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(topLeftAIWin(tempState) && state[2][0] === " ") {
+  if(topLeftAILoss(tempState) && state[2][0] === " ") {
     move = {
       row: 3,
       column: 1
     }
-    console.log("tl4");
+    console.log("tl4l");
   }
-  //END TOP LEFT WINS
+  //END TOP LEFT LOSSES
 
-  //Checking all diagonal wins for all rotated boards.
+  //Checking all diagonal losses for all rotated boards.
   tempState = state;
 
-  if(diagonalAIWin(tempState) && state[2][2] === " ") {
+  if(diagonalAILoss(tempState) && state[2][2] === " ") {
     move = {
       row: 3,
       column: 3
     }
-    console.log("d1");
+    console.log("d1l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(diagonalAIWin(tempState) && state[2][0] === " ") {
+  if(diagonalAILoss(tempState) && state[2][0] === " ") {
     move = {
       row: 3,
       column: 1
@@ -876,66 +912,66 @@ function generateAIMoveHard(state, firstPlayer) {
 
   tempState = rotateBoard(tempState);
 
-  if(diagonalAIWin(tempState) && state[0][0] === " ") {
+  if(diagonalAILoss(tempState) && state[0][0] === " ") {
     move = {
       row: 1,
       column: 1
     }
-    console.log("d3");
+    console.log("d3l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(diagonalAIWin(tempState) && state[0][2] === " ") {
+  if(diagonalAILoss(tempState) && state[0][2] === " ") {
     move = {
       row: 1,
       column: 3
     }
-    console.log("d4");
+    console.log("d4l");
   }
-  //END DIAGONAL WINS
+  //END DIAGONAL LOSSES
 
-  //Checking all straight wins on all rotated boards.
+  //Checking all straight losses on all rotated boards.
   tempState = state;
 
-  if(straightAIWin(tempState) && state[2][1] === " ") {
+  if(straightAILoss(tempState) && state[2][1] === " ") {
     move = {
       row: 3,
       column: 2
     }
-    console.log("s1");
+    console.log("s1l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(straightAIWin(tempState) && state[1][0] === " ") {
+  if(straightAILoss(tempState) && state[1][0] === " ") {
     move = {
       row: 2,
       column: 1
     }
-    console.log("s2");
+    console.log("s2l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(straightAIWin(tempState) && state[0][1] === " ") {
+  if(straightAILoss(tempState) && state[0][1] === " ") {
     move = {
       row: 1,
       column: 2
     }
-    console.log("s3");
+    console.log("s3l");
   }
 
   tempState = rotateBoard(tempState);
 
-  if(straightAIWin(tempState) && state[1][2] === " ") {
+  if(straightAILoss(tempState) && state[1][2] === " ") {
     move = {
       row: 2,
       column: 3
     }
-    console.log("s4");
+    console.log("s4l");
   }
-  //END STRAIGHT WINS
+  //END STRAIGHT LOSSES
 
   tempState = state;
 
